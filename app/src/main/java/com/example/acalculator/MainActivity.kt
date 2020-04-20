@@ -8,7 +8,11 @@ import androidx.core.view.GravityCompat
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
+const val EXTRA_USERS_MAIN = "com.example.intent.EXTRA_USERS_MAIN"
+
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener{
+
+    private val users = ArrayList<User>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
