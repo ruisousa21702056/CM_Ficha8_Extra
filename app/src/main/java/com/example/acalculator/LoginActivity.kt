@@ -17,9 +17,10 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        if(intent.getParcelableArrayListExtra<User>(EXTRA_USERS_LOGIN) != null){//Não entra aqui
+        users = intent.getParcelableArrayListExtra<User>(EXTRA_USERS_LOGIN)
+        /*if(intent.getParcelableArrayListExtra<User>(EXTRA_USERS_LOGIN) != null) {
             users = intent.getParcelableArrayListExtra<User>(EXTRA_USERS_LOGIN)
-        }
+        }*/
 
         regist_login_button.setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))
