@@ -7,31 +7,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
-
-const val EXTRA_USERS_MAIN = "com.example.intent.EXTRA_USERS_MAIN"
+import kotlinx.android.synthetic.main.drawer_header.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener{
-
-    private val users = ArrayList<User>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         setupDrawerMenu()
+        val user_name = intent.getStringExtra("user_name")
+        val user_email = intent.getStringExtra("user_email")
         if(!screenRotated(savedInstanceState)) {
             NavigationManager.goToCalculatorFragment(supportFragmentManager)
         }
-
-            /*if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            this.list_historic?.layoutManager = LinearLayoutManager(this)
-            this.list_historic?.adapter = HistoryAdapter(this, R.layout.item_expression,
-                operationList)
-            *//*button_equals.setOnClickListener {
-                onClickEquals()
-                adapter.notifyDataSetChanged()
-            }*//*
-        }*/
     }
 
     private fun screenRotated(savedInstanceState: Bundle?) : Boolean {

@@ -1,5 +1,6 @@
 package com.example.acalculator
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,8 +9,6 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_login.*
 import org.apache.commons.codec.digest.DigestUtils
 
-const val EXTRA_USERS_LOGIN = "com.example.intent.EXTRA_USERS_LOGIN"
-
 class LoginActivity : AppCompatActivity() {
 
     var users = ArrayList<User>()
@@ -17,16 +16,14 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        users = intent.getParcelableArrayListExtra<User>(EXTRA_USERS_LOGIN)
-        /*if(intent.getParcelableArrayListExtra<User>(EXTRA_USERS_LOGIN) != null) {
-            users = intent.getParcelableArrayListExtra<User>(EXTRA_USERS_LOGIN)
-        }*/
+        val pass_aux = DigestUtils.sha256Hex("pass")
+        var user = User("Rui","mail",pass_aux)
+        users.add(user)
 
         regist_login_button.setOnClickListener {
-            startActivity(Intent(this, SignUpActivity::class.java))
-            if(!users.isNullOrEmpty()){
-                intent.apply { putParcelableArrayListExtra(EXTRA_USERS_SIGNUP,ArrayList(users)) }
-            }
+            val intent: Intent = Intent(this,  SignUpActivity::class.java)
+            intent.apply {putParcelableArrayListExtra("users_from_login", ArrayList(users))}
+            startActivity(intent)
             finish()
         }
 
@@ -39,15 +36,24 @@ class LoginActivity : AppCompatActivity() {
 
             val text_pass_aux = DigestUtils.sha256Hex(text_pass)
             if(!users.isNullOrEmpty() && !text_email.equals("") && !text_pass.equals("")){
+                var have_user = false
                 for(user in users) {
                     if(user.email == text_email && user.password == text_pass_aux){
-                        startActivity(Intent(this, MainActivity::class.java))
+                        have_user = true
+                        var intentLogin = Intent(this,MainActivity::class.java)
+                        intentLogin.apply { putExtra("user_name", user.name) }
+                        intentLogin.apply { putExtra("user_email", user.email) }
+                        startActivity(intentLogin)
                         finish()
                     }
+                    if(!have_user){
+                        Toast.makeText(this,"E-mail/Password inválidos", Toast.LENGTH_LONG).show()
+                    }
                 }
+            }
+            else{
                 Toast.makeText(this,"E-mail/Password inválidos", Toast.LENGTH_LONG).show()
             }
-            Toast.makeText(this,"E-mail/Password inválidos", Toast.LENGTH_LONG).show()
         }
     }
 }

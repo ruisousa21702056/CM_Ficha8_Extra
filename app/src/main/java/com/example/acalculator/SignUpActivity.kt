@@ -1,5 +1,6 @@
 package com.example.acalculator
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
@@ -8,16 +9,12 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import org.apache.commons.codec.digest.DigestUtils
 
-const val EXTRA_USERS_SIGNUP = "com.example.intent.EXTRA_USERS_SIGNUP"
-
 class SignUpActivity : AppCompatActivity() {
-
-    var users = ArrayList<User>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
-        users = intent.getParcelableArrayListExtra<User>(EXTRA_USERS_SIGNUP)
+        val users = intent.getParcelableArrayListExtra<User>("users_from_login")
 
         submit_regist_button.setOnClickListener {
             var name = findViewById<EditText>(R.id.input_regist_name)
@@ -33,10 +30,15 @@ class SignUpActivity : AppCompatActivity() {
             if(!text_name.equals("") && !text_email.equals("") && text_pass.equals(text_confirm_pass)){
                 val text_pass_aux = DigestUtils.sha256Hex(text_pass)
                 val user = User(text_name,text_email, text_pass_aux)
-                users.add(user)
+                var usersAux = ArrayList<User>()
+                if(users != null){
+                    usersAux = users
+                }
+                usersAux.add(user)
                 Toast.makeText(this,"Registo efetuado com sucesso",Toast.LENGTH_LONG).show()
-                intent.apply { putParcelableArrayListExtra(EXTRA_USERS_LOGIN,ArrayList(users)) }
-                startActivity(Intent(this, LoginActivity::class.java))
+                val returnIntent = Intent(this,  LoginActivity::class.java)
+                returnIntent.apply {putParcelableArrayListExtra("users_from_regist", ArrayList(usersAux))}
+                startActivity(returnIntent)
                 finish()
             }
             else {
